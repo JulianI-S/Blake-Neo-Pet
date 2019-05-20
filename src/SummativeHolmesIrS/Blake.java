@@ -1,4 +1,5 @@
 package SummativeHolmesIrS;
+import java.util.Random;
 
 public class Blake {
 
