@@ -40,11 +40,6 @@ public class Driver {
 
 	}
 
-	/*
-	 * private static Blake createBlake(int[] stats) { if (stats.length > 0) {
-	 * return Blake shell1 = new Blake(stats); } else { Blake shell1 = new Blake();
-	 * } }
-	 */
 	private static long timePassed(LocalDateTime date) throws FileNotFoundException {
 		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd
 		// HH:mm");
