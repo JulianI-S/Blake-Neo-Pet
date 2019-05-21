@@ -73,5 +73,9 @@ public class Blake {
 	public void incAddiction(int amt) {
 		addiction += amt;
 	}
-
+	
+	@Override
+	public String toString() {
+		return ("Blake: \n" + "	Endurance: " + stats[0] + "\n	Perception: " + stats[1] + "\n	Strength: " + stats[2] + "\n	Charisma: "+stats[3]+"\n	Agility: "+stats[4]+"\n	Addiction: "+stats[5]);
+	}
 }
