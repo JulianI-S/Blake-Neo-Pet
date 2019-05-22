@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 public class Driver {
 
 	public static void main(String[] args) throws IOException {
-		Blake shell1 = null;
+		Blake shell1 = new Blake();
 		LocalDateTime dateRaw = exactTime();
 		System.out.println("Welcome to the dungeon");
 		long elapsed = timePassed(dateRaw);
@@ -26,13 +26,15 @@ public class Driver {
 					+ " minutes have passed since you last ran the program");
 
 		}
+		
 		int[] stats = findBlake();
 		if (stats[2] > 0) {
-			shell1 = new Blake(stats);
+			shell1.setStats(stats);
 		} else {
-			shell1 = new Blake();
+			shell1.genStats();
 		}
 		System.out.println(shell1.toString());
+
 		saveGame(dateRaw, shell1);
 	}
 
@@ -61,13 +63,10 @@ public class Driver {
 		int[] stats = new int[6];
 		while (!foundStats) {
 			if (in.nextLine().equals("stats")) {
-				//in.nextLine();
-				int i = 0;
-				while (in.hasNext()) {
-					if (in.next() != " ") {
-						System.out.println(in.next());
-						stats[i] = Integer.parseInt(in.next());
-					}
+				// in.nextLine();
+				String[] temp = in.nextLine().split(" ");
+				for (int r = 0; r < temp.length; r++) {
+					stats[r] = Integer.parseInt(temp[r]);
 				}
 				foundStats = true;
 			} else {
