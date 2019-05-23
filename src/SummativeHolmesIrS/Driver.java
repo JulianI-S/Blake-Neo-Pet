@@ -4,14 +4,21 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Driver {
+public class Driver extends Application{
 
 	public static void main(String[] args) throws IOException {
+		Application.launch(args);
 		Blake shell1 = new Blake();
 		LocalDateTime dateRaw = exactTime();
 		System.out.println("Welcome to the dungeon");
@@ -89,5 +96,14 @@ public class Driver {
 
 	private static LocalDateTime exactTime() {
 		return LocalDateTime.now();
+	}
+
+	@Override
+	public void start(Stage stage) throws Exception {
+		stage.setTitle("BlakePet");
+		Group root = new Group();
+		Scene scene = new Scene(root, 500, 500);
+		stage.setScene(scene);
+		stage.show();
 	}
 }
