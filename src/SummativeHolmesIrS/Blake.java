@@ -9,6 +9,9 @@ public class Blake {
 	private int charisma;
 	private int agility;
 	private int addiction;
+	private int vape;
+	private int food;
+	private int invSize = strength+2;
 
 	// change if adding more stat numbers
 	int statAmt = 6;
@@ -83,5 +86,20 @@ public class Blake {
 	public String toString() {
 		return ("Blake: \n" + "	Endurance: " + stats[0] + "\n	Perception: " + stats[1] + "\n	Strength: " + stats[2]
 				+ "\n	Charisma: " + stats[3] + "\n	Agility: " + stats[4] + "\n	Addiction: " + stats[5]);
+	}
+	//status effects
+	public void changeVape(int amt) {
+		if(food >=1) {
+		vape = vape + amt;}
+	}
+	public void changefood(int amt) {
+		if(vape >=1) {
+			food = food + amt;}
+	}
+	
+	public void effectCheck() {
+		while(invSize < strength) {
+			
+		}
 	}
 }
