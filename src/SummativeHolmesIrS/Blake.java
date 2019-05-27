@@ -98,8 +98,20 @@ public class Blake {
 	}
 	
 	public void effectCheck() {
-		while(invSize < strength) {
-			
-		}
+	int tempAgility = agility;
+	int tempEndurance = endurance;
+		
+		if(invSize < strength+2) {
+			for(int i = invSize; i >= strength+2; i = i -1) {
+				agility = agility -i;
+				endurance = endurance -i;
+			}	
+		}else {
+			agility = tempAgility;
+			endurance = tempEndurance;
+		}	
+		
+		
+		
 	}
 }
