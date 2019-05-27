@@ -38,8 +38,9 @@ public class Driver extends Application{
 		if (stats[2] > 0) {
 			shell1.setStats(stats);
 		} else {
-			shell1.genStats();
+			shell1.genStats();	
 		}
+		shell1.refreshStats();
 		System.out.println(shell1.toString());
 
 		saveGame(dateRaw, shell1);

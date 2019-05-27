@@ -24,25 +24,22 @@ public class Blake {
 			Random rand = new Random();
 			stats[i] = rand.nextInt(20);
 		}
+	}
+	
+	public void setStats(int[] arr) {
+		System.out.println("yuh");
+		
+		for (int i = 0; i < arr.length; i++) {
+			stats[i] = arr[i];
+		}
+	}
+	public void refreshStats() {
 		endurance = stats[0];
 		perception = stats[1];
 		strength = stats[2];
 		charisma = stats[3];
 		agility = stats[4];
 		addiction = stats[5];
-	}
-	
-	public void setStats(int[] arr) {
-		System.out.println("yuh");
-		endurance = arr[0];
-		perception = arr[1];
-		strength = arr[2];
-		charisma = arr[3];
-		agility = arr[4];
-		addiction = arr[5];
-		for (int i = 0; i < arr.length; i++) {
-			stats[i] = arr[i];
-		}
 	}
 
 	public int[] getStats() {
@@ -59,27 +56,27 @@ public class Blake {
 	}
 
 	public void incEndurance(int amt) {
-		endurance += amt;
+		stats[0] += amt;
 	}
 
 	public void incPerception(int amt) {
-		perception += amt;
+		stats[1] += amt;
 	}
 
 	public void incStrength(int amt) {
-		strength += amt;
+		stats[2] += amt;
 	}
 
 	public void incCharisma(int amt) {
-		charisma += amt;
+		stats[3] += amt;
 	}
 
 	public void incAgility(int amt) {
-		agility += amt;
+		stats[4] += amt;
 	}
 
 	public void incAddiction(int amt) {
-		addiction += amt;
+		stats[5] += amt;
 	}
 
 	@Override
