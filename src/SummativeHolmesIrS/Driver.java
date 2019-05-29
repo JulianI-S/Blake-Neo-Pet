@@ -15,10 +15,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Driver extends Application{
+public class Driver extends Application {
 
 	public static void main(String[] args) throws IOException {
-		Application.launch(args);
+		// Application.launch(args);
 		Blake blake = new Blake();
 		Food nandos = new Food();
 		LocalDateTime dateRaw = exactTime();
@@ -33,20 +33,30 @@ public class Driver extends Application{
 			System.out.println(elapsed / 3600 + " hours and " + (elapsed % 3600) / 60
 					+ " minutes have passed since you last ran the program");
 		}
-		
+
 		int[] stats = findBlake();
 		if (stats[2] > 0) {
 			blake.setStats(stats);
 		} else {
-			blake.genStats();	
+			blake.genStats();
 		}
 		blake.refreshStats();
 		System.out.println(blake.toString());
-		
-		double fDist = Math.sqrt(Math.pow((blake.x+nandos.x),2)+ Math.pow((blake.y+nandos.y),2));
-		double bRad = 10;
-		if(fDist < bRad) {
-			blake.moveTo(fDist, nandos, getAngle(blake.x,blake.y,nandos.x,nandos.y));
+
+		boolean running = true;
+		while (running) {
+			double fDist = Math.sqrt(Math.pow((blake.x - nandos.x), 2) + Math.pow((blake.y - nandos.y), 2));
+			System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
+			if (fDist < 1000) {
+				System.out.println("mmm");
+				System.out.println("Distance: " + fDist);
+				System.out.println("");
+				System.out.println("Blake X:" + blake.x + "| Blake Y: " + blake.y);
+				blake.moveTo(fDist, nandos, getAngle(blake.x, blake.y, nandos.x, nandos.y));		
+				System.out.println("gottem");
+				running = false;
+			}
+
 		}
 		saveGame(dateRaw, blake);
 	}
@@ -112,14 +122,14 @@ public class Driver extends Application{
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+
 	public static double getAngle(int bx, int by, int fx, int fy) {
-		double angleF = Math.atan((by-fy)/(bx-fx));
-		if ((by-fy)>0 && (bx-fx)>0) {
-			return angleF+Math.PI;
-		}else if ((by-fy)>0 && (bx-fx)>0) {
-			return (2*Math.PI) - angleF;
-		}else if ((by-fy)>0 && (bx-fx)<0) {
+		double angleF = Math.atan((by - fy) / (bx - fx));
+		if ((by - fy) > 0 && (bx - fx) > 0) {
+			return angleF + Math.PI;
+		} else if ((by - fy) > 0 && (bx - fx) > 0) {
+			return (2 * Math.PI) - angleF;
+		} else if ((by - fy) > 0 && (bx - fx) < 0) {
 			return Math.PI - angleF;
 		}
 		return angleF;

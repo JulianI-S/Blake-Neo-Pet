@@ -15,6 +15,8 @@ public class Blake {
 	private boolean alive = true;
 	private int foodCapacity = (endurance +2)/2;
 	private int hunger;
+	
+	int radius = 5*perception;
 
 	int x = 200;
 	int y = 200;
@@ -138,6 +140,8 @@ public class Blake {
 	
 	public void moveTo(double d, Food f, double a) {
 		while (d > 0) {
+			System.out.println("X: "+x);
+			System.out.println("Y: "+y);
 			x += agility*Math.cos(a);
 			y += agility*Math.sin(a);
 		}
