@@ -13,6 +13,9 @@ public class Blake {
 	private int food;
 	private int invSize = strength+2;
 
+	int x = 200;
+	int y = 200;
+
 	// change if adding more stat numbers
 	int statAmt = 6;
 
@@ -110,8 +113,6 @@ public class Blake {
 			agility = tempAgility;
 			endurance = tempEndurance;
 		}	
-		
-		
 		
 	}
 }
