@@ -113,6 +113,12 @@ public class Blake {
 			agility = tempAgility;
 			endurance = tempEndurance;
 		}	
-		
+	}
+	
+	public void moveTo(int d, Food f, double a) {
+		while (d > 0) {
+			x += agility*Math.cos(a);
+			y += agility*Math.sin(a);
+		}
 	}
 }
