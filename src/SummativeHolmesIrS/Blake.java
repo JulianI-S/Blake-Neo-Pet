@@ -136,7 +136,7 @@ public class Blake {
 		}	
 	}
 	
-	public void moveTo(int d, Food f, double a) {
+	public void moveTo(double d, Food f, double a) {
 		while (d > 0) {
 			x += agility*Math.cos(a);
 			y += agility*Math.sin(a);
