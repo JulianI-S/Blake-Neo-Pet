@@ -19,7 +19,8 @@ public class Driver extends Application{
 
 	public static void main(String[] args) throws IOException {
 		Application.launch(args);
-		Blake shell1 = new Blake();
+		Blake blake = new Blake();
+		Food nandos = new Food();
 		LocalDateTime dateRaw = exactTime();
 		System.out.println("Welcome to the dungeon");
 		long elapsed = timePassed(dateRaw);
@@ -31,19 +32,23 @@ public class Driver extends Application{
 		} else {
 			System.out.println(elapsed / 3600 + " hours and " + (elapsed % 3600) / 60
 					+ " minutes have passed since you last ran the program");
-
 		}
 		
 		int[] stats = findBlake();
 		if (stats[2] > 0) {
-			shell1.setStats(stats);
+			blake.setStats(stats);
 		} else {
-			shell1.genStats();	
+			blake.genStats();	
 		}
-		shell1.refreshStats();
-		System.out.println(shell1.toString());
-
-		saveGame(dateRaw, shell1);
+		blake.refreshStats();
+		System.out.println(blake.toString());
+		
+		double fDist = Math.sqrt(Math.pow((blake.x+nandos.x),2)+ Math.pow((blake.y+nandos.y),2));
+		double bRad = 10;
+		if(fDist < bRad) {
+			blake.moveTo(fDist, nandos, getAngle(blake.x,blake.y,nandos.x,nandos.y));
+		}
+		saveGame(dateRaw, blake);
 	}
 
 	private void display() {
@@ -106,5 +111,17 @@ public class Driver extends Application{
 		Scene scene = new Scene(root, 500, 500);
 		stage.setScene(scene);
 		stage.show();
+	}
+	
+	public static double getAngle(int bx, int by, int fx, int fy) {
+		double angleF = Math.atan((by-fy)/(bx-fx));
+		if ((by-fy)>0 && (bx-fx)>0) {
+			return angleF+Math.PI;
+		}else if ((by-fy)>0 && (bx-fx)>0) {
+			return (2*Math.PI) - angleF;
+		}else if ((by-fy)>0 && (bx-fx)<0) {
+			return Math.PI - angleF;
+		}
+		return angleF;
 	}
 }
