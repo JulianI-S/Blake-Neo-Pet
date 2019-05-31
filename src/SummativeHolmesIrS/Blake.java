@@ -13,10 +13,12 @@ public class Blake {
 	private int food;
 	private int invSize = strength+2;
 	private boolean alive = true;
-	private int foodCapacity = (endurance +2)/2;
-	private int hunger;
+	
+	
+
 	
 	int radius = 5*perception;
+
 
 	int x = 200;
 	int y = 200;
@@ -77,20 +79,32 @@ public class Blake {
 				+ "\n	Charisma: " + stats[3] + "\n	Agility: " + stats[4] + "\n	Addiction: " + stats[5]);
 	}
 	//ensures inventory doesn't fill up with all vapes or food  
+	//allows access to food outside of function
 	public void changeVape(int amt) {
 		if(food >=1) {
 		vape = vape + amt;}
 	}
+	//allows access to vapes outside of function
 	public void changefood(int amt) {
 		if(vape >=1) {
 			food = food + amt;}
 	}
 	
-	public void effectCheck() {
+	
+	
+	public void effectCheck(long time) {
+		//
+		long foodCapacity = (20-endurance)/2*time/240; // every two hours
+		double vapeCapacity = (20-addiction)/2.5*time/360;//every 3 hours
 		int tempAgility = agility;
 		int tempEndurance = endurance;
 		int tempCharisma = charisma;
 		int tempaddiction = addiction;
+		long hunger = 0;
+		long vapeNeed = 0;
+		
+		
+		
 		
 		while(hunger < foodCapacity && food >= 1 ) {
 			hunger = hunger + 1;
@@ -105,6 +119,7 @@ public class Blake {
 			tempCharisma = charisma;
 			tempAgility = agility;
 			if (hunger <= 0) {
+				alive = false;
 				System.out.println("Blake is dead");
 			}
 		}
@@ -117,6 +132,20 @@ public class Blake {
 			agility = tempAgility;
 			endurance = tempEndurance;
 		}	
+		while(vapeNeed < vapeCapacity && vape >= 1 ) {
+			vapeNeed = vapeNeed + 1;
+			vape = vape -1;
+		} 
+		if(vapeNeed < vapeCapacity/2) {
+			agility = agility -1;
+			charisma = charisma -2;
+			endurance = endurance -1;
+		} else {
+			endurance =tempEndurance; 
+			charisma = tempCharisma;
+			agility = tempAgility;
+		}
+		
 	}
 	
 	public void moveTo(double d, Food f, double a) {
