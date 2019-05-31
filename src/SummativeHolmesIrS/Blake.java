@@ -142,8 +142,10 @@ public class Blake {
 		while (d > 0) {
 			System.out.println("X: "+x);
 			System.out.println("Y: "+y);
-			x += agility*Math.cos(a);
-			y += agility*Math.sin(a);
+			System.out.println("Sin: "+Math.sin(a));
+			System.out.println("Cos: "+Math.cos(a));
+			x += Math.cos(a);
+			y += Math.sin(a);
 		}
 	}
 }

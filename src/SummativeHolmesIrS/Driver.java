@@ -45,7 +45,7 @@ public class Driver extends Application {
 
 		boolean running = true;
 		while (running) {
-			double fDist = Math.sqrt(Math.pow((blake.x - nandos.x), 2) + Math.pow((blake.y - nandos.y), 2));
+			double fDist = Math.sqrt(Math.pow((blake.x + nandos.x), 2) + Math.pow((blake.y + nandos.y), 2));
 			System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
 			if (fDist < 1000) {
 				System.out.println("mmm");
@@ -126,12 +126,12 @@ public class Driver extends Application {
 	public static double getAngle(int bx, int by, int fx, int fy) {
 		double angleF = Math.atan((by - fy) / (bx - fx));
 		if ((by - fy) > 0 && (bx - fx) > 0) {
-			return angleF + Math.PI;
+			return Math.toDegrees(angleF) + 180;
 		} else if ((by - fy) > 0 && (bx - fx) > 0) {
-			return (2 * Math.PI) - angleF;
+			return 360 - Math.toDegrees(angleF);
 		} else if ((by - fy) > 0 && (bx - fx) < 0) {
-			return Math.PI - angleF;
+			return 180 - Math.toDegrees(angleF);
 		}
-		return angleF;
+		return Math.toDegrees(angleF);
 	}
 }
