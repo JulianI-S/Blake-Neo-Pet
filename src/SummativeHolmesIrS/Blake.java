@@ -66,28 +66,9 @@ public class Blake {
 		return -1;
 	}
 
-	public void incEndurance(int amt) {
-		stats[0] += amt;
-	}
-
-	public void incPerception(int amt) {
-		stats[1] += amt;
-	}
-
-	public void incStrength(int amt) {
-		stats[2] += amt;
-	}
-
-	public void incCharisma(int amt) {
-		stats[3] += amt;
-	}
-
-	public void incAgility(int amt) {
-		stats[4] += amt;
-	}
-
-	public void incAddiction(int amt) {
-		stats[5] += amt;
+	//Call refreshStats after each method call
+	public void incStat(int stat, int amt) {
+		stats[stat] += amt;
 	}
 
 	@Override
