@@ -5,11 +5,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +28,7 @@ import java.io.PrintWriter;
 public class Driver extends Application {
 
 	public static void main(String[] args) throws IOException {
-		// Application.launch(args);
+		Application.launch(args);
 		Blake blake = new Blake();
 		Food nandos = new Food();
 		LocalDateTime dateRaw = exactTime();
@@ -34,30 +44,6 @@ public class Driver extends Application {
 					+ " minutes have passed since you last ran the program");
 		}
 
-		int[] stats = findBlake();
-		if (stats[2] > 0) {
-			blake.setStats(stats);
-		} else {
-			blake.genStats();
-		}
-		blake.refreshStats();
-		System.out.println(blake.toString());
-
-		boolean running = true;
-		while (running) {
-			double fDist = Math.sqrt(Math.pow((blake.x + nandos.x), 2) + Math.pow((blake.y + nandos.y), 2));
-			System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
-			if (fDist < 1000) {
-				System.out.println("mmm");
-				System.out.println("Distance: " + fDist);
-				System.out.println("");
-				System.out.println("Blake X:" + blake.x + "| Blake Y: " + blake.y);
-				blake.moveTo(fDist, nandos, getAngle(blake.x, blake.y, nandos.x, nandos.y));		
-				System.out.println("gottem");
-				running = false;
-			}
-
-		}
 		saveGame(dateRaw, blake);
 	}
 
@@ -118,9 +104,92 @@ public class Driver extends Application {
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("BlakePet");
 		Group root = new Group();
-		Scene scene = new Scene(root, 500, 500);
+		Scene scene = new Scene(root);
 		stage.setScene(scene);
+
+		Blake blake = new Blake();
+		Food nandos = new Food();
+
+		Canvas canvas = new Canvas(500, 500);
+		root.getChildren().add(canvas);
+
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		gc.setFill(Color.RED);
+		gc.setStroke(Color.BLACK);
+		gc.setLineWidth(2);
+		Font theFont = Font.font("Times New Roman", FontWeight.BOLD, 48);
+		gc.setFont(theFont);
+		gc.strokeText("Welcome to the dungeon", 0, 40);
+
+		// File file = new File("BlakeSprite1.png");
+		// System.out.println(file.toURI().toURL().toString());
+		Image pIcon = new Image("file:Resources\\BlakeSprite1.png");
+		ImageView bView = new ImageView(pIcon);
+		bView.setImage(pIcon);
+		bView.setCache(true);
+		root.getChildren().add(bView);
+
+		Image vIcon = new Image("file:Resources\\juul.png");
+		ImageView jView = new ImageView(vIcon);
+		jView.setFitWidth(50);
+		jView.setPreserveRatio(true);
+		jView.setImage(vIcon);
+		jView.setCache(true);
+		root.getChildren().add(jView);
+
 		stage.show();
+
+		int[] stats = findBlake();
+		if (stats[2] > 0) {
+			blake.setStats(stats);
+		} else {
+			blake.genStats();
+		}
+		blake.refreshStats();
+		System.out.println(blake.toString());
+
+		new AnimationTimer() {
+			public void handle(long currentNanoTime) {
+
+				jView.setX(nandos.x);
+				jView.setY(nandos.y);
+
+				double fDist = Math.sqrt(Math.pow((blake.x + nandos.x), 2) + Math.pow((blake.y + nandos.y), 2));
+				System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
+
+				if (fDist > 0) {
+					// System.out.println("mmm");
+					// System.out.println("Distance: " + fDist);
+					// System.out.println("");
+					// System.out.println("Blake X:" + blake.x + "| Blake Y: " + blake.y);
+					blake.moveTo(fDist, getAngle(blake.x, blake.y, nandos.x, nandos.y));
+					bView.setX(blake.x);
+					bView.setY(blake.y);
+				}
+
+			}
+		}.start();
+
+		// boolean running = true;
+		/*
+		 * while (running) {
+		 * 
+		 * 
+		 * 
+		 * double fDist = Math.sqrt(Math.pow((blake.x + nandos.x), 2) +
+		 * Math.pow((blake.y + nandos.y), 2)); System.out.println("Food X:" + nandos.x +
+		 * " | Food Y: " + nandos.y);
+		 * 
+		 * if (fDist <= 1000) { System.out.println("mmm");
+		 * System.out.println("Distance: " + fDist); System.out.println("");
+		 * System.out.println("Blake X:" + blake.x + "| Blake Y: " + blake.y);
+		 * //blake.moveTo(fDist, nandos, getAngle(blake.x, blake.y, nandos.x,
+		 * nandos.y)); System.out.println("gottem"); running = false; }
+		 * 
+		 * }
+		 */
+
 	}
 
 	public static double getAngle(int bx, int by, int fx, int fy) {
