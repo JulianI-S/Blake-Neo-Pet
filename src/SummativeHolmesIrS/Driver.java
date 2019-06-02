@@ -7,10 +7,13 @@ import java.util.Scanner;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -115,12 +118,10 @@ public class Driver extends Application {
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 
-		gc.setFill(Color.RED);
 		gc.setStroke(Color.BLACK);
-		gc.setLineWidth(2);
-		Font theFont = Font.font("Times New Roman", FontWeight.BOLD, 48);
+		gc.setLineWidth(1);
+		Font theFont = Font.font("Times New Roman", 14);
 		gc.setFont(theFont);
-		gc.strokeText("Welcome to the dungeon", 0, 40);
 
 		// File file = new File("BlakeSprite1.png");
 		// System.out.println(file.toURI().toURL().toString());
@@ -138,6 +139,10 @@ public class Driver extends Application {
 		jView.setCache(true);
 		root.getChildren().add(jView);
 
+		Button btn = new Button("Reset");
+		btn.setLayoutY(490);
+		root.getChildren().add(btn);
+
 		stage.show();
 
 		int[] stats = findBlake();
@@ -148,29 +153,47 @@ public class Driver extends Application {
 		}
 		blake.refreshStats();
 		System.out.println(blake.toString());
-
+		
+		System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
+		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-
+				gc.clearRect(0, 0, 500, 500);
+				
+				gc.strokeText("Bot-X: " + String.valueOf(blake.x), 0, 60);
+				gc.strokeText("Bot-Y: " + String.valueOf(blake.y), 0, 80);
+				
+				gc.strokeText("Food-X: " + String.valueOf(nandos.x), 0, 100);
+				gc.strokeText("Food-Y: " + String.valueOf(nandos.y), 0, 120);
+				
 				jView.setX(nandos.x);
 				jView.setY(nandos.y);
 
-				double fDist = Math.sqrt(Math.pow((blake.x + nandos.x), 2) + Math.pow((blake.y + nandos.y), 2));
-				System.out.println("Food X:" + nandos.x + " | Food Y: " + nandos.y);
-
+				btn.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent arg0) {
+						blake.x = 200;
+						blake.y = 200;
+						nandos.regen();
+					}
+				});
+				double fDist = Math.sqrt(Math.pow((blake.x - nandos.x), 2) + Math.pow((blake.y - nandos.y), 2));
 				if (fDist > 0) {
 					// System.out.println("mmm");
 					// System.out.println("Distance: " + fDist);
 					// System.out.println("");
 					// System.out.println("Blake X:" + blake.x + "| Blake Y: " + blake.y);
-					blake.moveTo(fDist, getAngle(blake.x, blake.y, nandos.x, nandos.y));
+					
 					bView.setX(blake.x);
 					bView.setY(blake.y);
+					gc.strokeText("Distance: " + String.valueOf(fDist), 0, 40);
+					gc.strokeText("Angle: " + String.valueOf(getAngle(blake.x, blake.y, nandos.x, nandos.y)), 0, 20);
+					gc.strokeText("atan: " + String.valueOf(Math.toDegrees(Math.atan((blake.y-nandos.y) / (blake.x-nandos.x)))), 300, 20);
+					//blake.moveTo(fDist, getAngle(blake.x, blake.y, nandos.x, nandos.y));
 				}
 
+				
 			}
 		}.start();
-
 		// boolean running = true;
 		/*
 		 * while (running) {
@@ -192,14 +215,21 @@ public class Driver extends Application {
 
 	}
 
-	public static double getAngle(int bx, int by, int fx, int fy) {
-		double angleF = Math.atan((by - fy) / (bx - fx));
-		if ((by - fy) > 0 && (bx - fx) > 0) {
+	public static double getAngle(int bx, int by, int fx, int fy) throws ArithmeticException{
+		double angleF;
+		if((bx-fx) != 0) {
+			angleF = Math.atan((by - fy) / (bx - fx));
+		}else {
+			bx += 1;
+			angleF = Math.atan((by - fy) / (bx - fx));
+		}
+		
+		if ((by - fy) < 0 && (bx - fx) > 0) {
 			return Math.toDegrees(angleF) + 180;
 		} else if ((by - fy) > 0 && (bx - fx) > 0) {
-			return 360 - Math.toDegrees(angleF);
-		} else if ((by - fy) > 0 && (bx - fx) < 0) {
 			return 180 - Math.toDegrees(angleF);
+		} else if ((by - fy) < 0 && (bx - fx) < 0) {
+			return 360 - Math.toDegrees(angleF);
 		}
 		return Math.toDegrees(angleF);
 	}

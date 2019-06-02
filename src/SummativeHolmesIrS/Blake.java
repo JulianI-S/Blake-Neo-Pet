@@ -145,8 +145,8 @@ public class Blake {
 	}
 
 	public void moveTo(double d, double a) {
-		x += agility*Math.cos(a);
-		y += agility*Math.sin(a);
+		x += Math.cos(a);
+		y -= Math.sin(a);
 	}
 
 	public void moveUp() {
