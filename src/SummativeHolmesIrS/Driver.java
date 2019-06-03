@@ -67,7 +67,7 @@ public class Driver extends Application {
 		Font theFont = Font.font("Times New Roman", 14);
 		gc.setFont(theFont);
 
-		int foodSpwn = 4;
+		int foodSpwn = 1;
 
 		Food[] f = new Food[foodSpwn];
 
@@ -94,12 +94,22 @@ public class Driver extends Application {
 		blake.refreshStats();
 
 		System.out.println(blake.toString());
+		ImageView[] views = new ImageView[f.length];
+		for (int i = 0; i < f.length; i++) {
+			f[i] = new Food();
+			views[i] = f[i].setImage("file:Resources\\juul.png", root);
+			views[i].setFitWidth(50);
+			views[i].setPreserveRatio(true);
+			views[i].setX(f[i].x);
+			views[i].setY(f[i].y);
+		}
 
 		new AnimationTimer() {
 			int intCounter = 0;
 
 			double randDist = 0;
 			double randA = 0;
+			int currentFocus = 0;
 
 			public void handle(long currentNanoTime) {
 				gc.clearRect(0, 0, 500, 500);
@@ -109,14 +119,6 @@ public class Driver extends Application {
 
 				// gc.strokeText("Food-X: " + String.valueOf(f.x), 0, 100);
 				// gc.strokeText("Food-Y: " + String.valueOf(f.y), 0, 120);
-				ImageView[] views = new ImageView[f.length];
-				for (int i = 0; i < f.length; i++) {
-					//views[i] = f[i].setImage("file:Resources\\juul.png", root);
-					views[i].setFitWidth(50);
-					views[i].setPreserveRatio(true);
-					views[i].setX(f[i].x);
-					views[i].setY(f[i].y);
-				}
 
 				btn.setOnAction(new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent arg0) {
@@ -127,7 +129,6 @@ public class Driver extends Application {
 						for (int n = 0; n < f.length; n++) {
 							f[n].regen();
 						}
-
 						randA = 0;
 						randDist = 0;
 						intCounter = 0;
@@ -137,9 +138,10 @@ public class Driver extends Application {
 				double[] fDist = new double[f.length];
 				for (int d = 0; d < f.length; d++) {
 					fDist[d] = Math.sqrt(Math.pow((blake.x - f[d].x), 2) + Math.pow((blake.y - f[d].y), 2));
+					gc.strokeText("Distance "+ d+": " + String.valueOf(fDist[d]), 0, 100+d*20);
 				}
 
-				gc.strokeText("Distance: " + String.valueOf(fDist), 0, 40);
+				
 				gc.strokeText("counter: " + String.valueOf(intCounter), 300, 40);
 				// gc.strokeText("Angle: " + String.valueOf(getAngle(blake.x, blake.y, f.x,
 				// f.y)), 0, 20);
@@ -158,11 +160,12 @@ public class Driver extends Application {
 
 				for (int s = 0; s < f.length; s++) {
 					if (fDist[s] < blake.radius) {
+						currentFocus = s;
 						intCounter = 0;
 
-						blake.moveTo(fDist[s], getAngle(blake.x, blake.y, f[s].x, f[s].y));
+						blake.moveTo(fDist[currentFocus], getAngle(blake.x, blake.y, f[currentFocus].x, f[currentFocus].y));
 						if (fDist[s] < 10) {
-							f[s].regen();
+							f[currentFocus].regen();
 						}
 					} else {
 						if (intCounter == 1 || intCounter == blake.endurance * 10) {

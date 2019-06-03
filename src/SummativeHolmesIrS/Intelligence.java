@@ -91,8 +91,9 @@ public class Intelligence {
 	}
 
 	public void moveTo(double d, double a) {
-		x += (agility/10)*Math.cos(a);
-		y += (agility/10)*Math.sin(a);
+		//Add speed multiplier
+		x += Math.cos(a);
+		y += Math.sin(a);
 	}
 	
 	public ImageView setImage(String imageFile, Group root) {
