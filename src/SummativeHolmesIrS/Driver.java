@@ -67,7 +67,7 @@ public class Driver extends Application {
 		Font theFont = Font.font("Times New Roman", 14);
 		gc.setFont(theFont);
 
-		int foodSpwn = 1;
+		int foodSpwn = 3;
 
 		Food[] f = new Food[foodSpwn];
 
@@ -97,7 +97,7 @@ public class Driver extends Application {
 		ImageView[] views = new ImageView[f.length];
 		for (int i = 0; i < f.length; i++) {
 			f[i] = new Food();
-			views[i] = f[i].setImage("file:Resources\\juul.png", root);
+			views[i] = f[i].setImage("file:Resources\\food.jpg", root);
 			views[i].setFitWidth(50);
 			views[i].setPreserveRatio(true);
 			views[i].setX(f[i].x);
@@ -117,8 +117,8 @@ public class Driver extends Application {
 				gc.strokeText("Bot-X: " + String.valueOf(blake.x), 0, 60);
 				gc.strokeText("Bot-Y: " + String.valueOf(blake.y), 0, 80);
 
-				// gc.strokeText("Food-X: " + String.valueOf(f.x), 0, 100);
-				// gc.strokeText("Food-Y: " + String.valueOf(f.y), 0, 120);
+				//gc.strokeText("Food-X: " + String.valueOf(f[0].x), 0, 20);
+			//	gc.strokeText("Food-Y: " + String.valueOf(f[0].y), 0, 40);
 
 				btn.setOnAction(new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent arg0) {
@@ -129,6 +129,7 @@ public class Driver extends Application {
 						for (int n = 0; n < f.length; n++) {
 							f[n].regen();
 						}
+						
 						randA = 0;
 						randDist = 0;
 						intCounter = 0;
@@ -158,14 +159,15 @@ public class Driver extends Application {
 					blake.y = canvas.getHeight() + 40;
 				}
 
-				for (int s = 0; s < f.length; s++) {
+				for (int s = currentFocus; s < f.length; s++) {
 					if (fDist[s] < blake.radius) {
 						currentFocus = s;
 						intCounter = 0;
-
+						
 						blake.moveTo(fDist[currentFocus], getAngle(blake.x, blake.y, f[currentFocus].x, f[currentFocus].y));
 						if (fDist[s] < 10) {
 							f[currentFocus].regen();
+							currentFocus = 0;
 						}
 					} else {
 						if (intCounter == 1 || intCounter == blake.endurance * 10) {
@@ -180,6 +182,12 @@ public class Driver extends Application {
 				intCounter += 1;
 				bView.setX(blake.x);
 				bView.setY(blake.y);
+				
+				for (int d = 0; d < f.length; d++) {
+					views[d].setX(f[d].x);
+					views[d].setY(f[d].y);
+
+				}
 				/*
 				 * if (f2Dist < blake2.radius) { gc.strokeText("2", blake.x+10, blake.y);
 				 * bView2.setX(blake2.x); bView2.setY(blake2.y); blake2.moveTo(fDist,
