@@ -1,0 +1,1 @@
+If I didn't do it properly since writing this, I wasn't sure where to put the test cases, class diagram, etc. So I'm just putting them on the GitHub for now.
