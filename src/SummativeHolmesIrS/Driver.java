@@ -199,7 +199,13 @@ public class Driver extends Application {
 		}.start();
 		saveGame(dateRaw, blake);
 	}
-
+	
+	/**
+	 * compares a chosen LocalDateTime with the time from the current save file 
+	 * @param date the LocalDateTime to compare
+	 * @return a long, the amount of time passed in seconds
+	 * @throws FileNotFoundException
+	 */
 	private static long timePassed(LocalDateTime date) throws FileNotFoundException {
 		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd
 		// HH:mm");
@@ -215,6 +221,11 @@ public class Driver extends Application {
 
 	}
 
+	/**
+	 * Checks to see if there is a current save file, pulls saved stats if there is
+	 * @return the stats from the save file or an empty int[] array
+	 * @throws FileNotFoundException
+	 */
 	private static int[] findBlake() throws FileNotFoundException {
 		Scanner in = new Scanner(new FileReader("Saves\\sf.txt"));
 		boolean foundStats = false;
@@ -234,6 +245,12 @@ public class Driver extends Application {
 		return stats;
 	}
 
+	/**
+	 * Saves the game in a txt file
+	 * @param date The LocalDateTime to be saved
+	 * @param blake the blake object to save
+	 * @throws IOException
+	 */
 	private static void saveGame(LocalDateTime date, Blake blake) throws IOException {
 		PrintWriter writer = new PrintWriter("Saves\\sf.txt");
 		writer.println("time");
@@ -244,11 +261,24 @@ public class Driver extends Application {
 		}
 		writer.close();
 	}
-
+	
+	/**
+	 * gets the exact LocalDateTime when the method is called
+	 * @return
+	 */
 	private static LocalDateTime exactTime() {
 		return LocalDateTime.now();
 	}
-
+	
+	/**
+	 * Finds the angle in degrees of between to objects
+	 * @param x the X coordinate of the central object
+	 * @param y the Y coordinate of the central object
+	 * @param x2 the X coordinate of the outer object
+	 * @param y2 the Y coordinate of the outer object
+	 * @return the angle A in degrees as a double
+	 * @throws ArithmeticException
+	 */
 	public static double getAngle(double x, double y, double x2, double y2) throws ArithmeticException {
 		double angleF;
 		if ((x - x2) != 0) {

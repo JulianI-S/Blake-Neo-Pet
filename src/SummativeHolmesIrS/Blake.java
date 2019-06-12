@@ -7,20 +7,35 @@ public class Blake extends Intelligence {
 	public Blake() {
 
 	}
-
+	
+	/**
+	 * modifies the vape variable by a specified amount
+	 * @param amt to increase by
+	 */
 	public void changeVape(int amt) {
+		//when food is not 0
 		if (food >= 1) {
 			vape = vape + amt;
 		}
 	}
 
-	// allows access to vapes outside of function
+	/**
+	 * modifies the food variable by a specified amount
+	 * @param amt to increase by
+	 */
 	public void changefood(int amt) {
+		//when vape is not 0
 		if (vape >= 1) {
 			food = food + amt;
 		}
 	}
-
+	
+	/**
+	 * checks all possible effects involving inventory, hunger,addiction, stats, etc. 
+	 * and changes the respective variables accordingly based on the amount of time passed. 
+	 * Should be run at the start of the program after accessing the save file. 
+	 * @param time the amount of time passed
+	 */
 	public void effectCheck(long time) {
 		//
 		long foodCapacity = (20 - endurance) / 2 * time / 240; // every two hours
