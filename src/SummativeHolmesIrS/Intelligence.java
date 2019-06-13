@@ -121,12 +121,22 @@ public class Intelligence {
 				+ "\n	Charisma: " + stats[3] + "\n	Agility: " + stats[4] + "\n	Addiction: " + stats[5]);
 	}
 	
-	public void moveTo(double d, double a) {
+	/**
+	 * Increases x and y variables for intelligence, in a direction
+	 * @param a the angle to move in from the x axis
+	 */
+	public void moveTo(double a) {
 		//Add speed multiplier
 		x += Math.cos(a);
 		y += Math.sin(a);
 	}
 	
+	/**
+	 * Sets an image for the intelligence, and creates an ImageView to display it
+	 * @param imageFile the file of the image
+	 * @param root the group to put the ImageView in
+	 * @return the ImageView
+	 */
 	public ImageView setImage(String imageFile, Group root) {
 		Image sprite = new Image(imageFile);
 		image = sprite;

@@ -29,6 +29,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Your personal blake pet
+ * @author Garrett and Julian
+ *
+ */
 public class Driver extends Application {
 
 	public static void main(String[] args) throws IOException {
@@ -39,19 +44,23 @@ public class Driver extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		//Creating the stage
 		stage.setTitle("BlakePet");
 		Group root = new Group();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
-
+		
 		LocalDateTime dateRaw = exactTime();
 		System.out.println("Welcome to the dungeon");
 		long elapsed = timePassed(dateRaw);
+		//If time is less than a minutes
 		if (elapsed < 60) {
 			System.out.println(elapsed + " seconds have passed since you last ran the program");
+		//Less than an hour
 		} else if (elapsed < 3600) {
 			System.out.println(elapsed / 60 + " minutes and " + elapsed % 60
 					+ " seconds have passed since you last ran the program");
+		//More than an hour
 		} else {
 			System.out.println(elapsed / 3600 + " hours and " + (elapsed % 3600) / 60
 					+ " minutes have passed since you last ran the program");
@@ -61,19 +70,23 @@ public class Driver extends Application {
 		root.getChildren().add(canvas);
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-
+		
+		//Font tings
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1);
 		Font theFont = Font.font("Times New Roman", 14);
 		gc.setFont(theFont);
-
+		
+		//the amount of food to spawn initially (to do: random food spawns at set intervals)
 		int foodSpwn = 3;
-
+		
+		//multiple Food objects are kept in an array
 		Food[] f = new Food[foodSpwn];
 
 		Blake blake = new Blake();
 		ImageView bView = blake.setImage("file:Resources\\BlakeSprite1.png", root);
-
+		
+		//initialize blake object
 		Intelligence blake2 = new Intelligence();
 		// ImageView bView2 = blake.setImage("file:Resources\\BlakeSprite1.png", root);
 		blake2.genStats();
@@ -84,7 +97,8 @@ public class Driver extends Application {
 		root.getChildren().add(btn);
 
 		stage.show();
-
+		
+		//code to check if saved stats should be used, or generate new ones
 		int[] stats = findBlake();
 		if (stats[2] > 0) {
 			blake.setStats(stats);
@@ -94,6 +108,8 @@ public class Driver extends Application {
 		blake.refreshStats();
 
 		System.out.println(blake.toString());
+		
+		//ImageView array for food objects
 		ImageView[] views = new ImageView[f.length];
 		for (int i = 0; i < f.length; i++) {
 			f[i] = new Food();
@@ -105,22 +121,26 @@ public class Driver extends Application {
 		}
 
 		new AnimationTimer() {
+			//Random movement vaiables
 			int intCounter = 0;
-
 			double randDist = 0;
 			double randA = 0;
+			
+			//the food item blake is focused on
 			int currentFocus = 0;
 
 			public void handle(long currentNanoTime) {
 				gc.clearRect(0, 0, 500, 500);
-
-				gc.strokeText("Bot-X: " + String.valueOf(blake.x), 0, 60);
-				gc.strokeText("Bot-Y: " + String.valueOf(blake.y), 0, 80);
+				
+				//lots of debugging text
+				gc.strokeText("Bot-X: " + String.valueOf(blake.x), 0, 20);
+				gc.strokeText("Bot-Y: " + String.valueOf(blake.y), 0, 40);
 
 				//gc.strokeText("Food-X: " + String.valueOf(f[0].x), 0, 20);
 			//	gc.strokeText("Food-Y: " + String.valueOf(f[0].y), 0, 40);
 
 				btn.setOnAction(new EventHandler<ActionEvent>() {
+					//code to reset positions on button press
 					public void handle(ActionEvent arg0) {
 						blake.x = 200;
 						blake.y = 200;
@@ -135,11 +155,12 @@ public class Driver extends Application {
 						intCounter = 0;
 					}
 				});
-
+				
+				//calculate the distance for each food item to blake
 				double[] fDist = new double[f.length];
 				for (int d = 0; d < f.length; d++) {
 					fDist[d] = Math.sqrt(Math.pow((blake.x - f[d].x), 2) + Math.pow((blake.y - f[d].y), 2));
-					gc.strokeText("Distance "+ d+": " + String.valueOf(fDist[d]), 0, 100+d*20);
+					gc.strokeText("Distance "+ d+": " + String.valueOf(fDist[d]), 0, 60+d*20);
 				}
 
 				
@@ -147,7 +168,8 @@ public class Driver extends Application {
 				// gc.strokeText("Angle: " + String.valueOf(getAngle(blake.x, blake.y, f.x,
 				// f.y)), 0, 20);
 				gc.strokeText("radius: " + String.valueOf(blake.radius), 300, 20);
-
+				
+				//stops blake from leaving screen area
 				if (blake.x >= canvas.getWidth() + 50) {
 					blake.x = -40;
 				} else if (blake.x <= -50) {
@@ -158,27 +180,33 @@ public class Driver extends Application {
 				} else if (blake.y <= -50) {
 					blake.y = canvas.getHeight() + 40;
 				}
-
+				
+				//for every food item, if blake is wihin range, change currentFocus to the current index
 				for (int s = currentFocus; s < f.length; s++) {
 					if (fDist[s] < blake.radius) {
 						currentFocus = s;
+						
+						//intCounter freezes
 						intCounter = 0;
 						
-						blake.moveTo(fDist[currentFocus], getAngle(blake.x, blake.y, f[currentFocus].x, f[currentFocus].y));
+						//move blake towards the angle for the currentFocus food item
+						blake.moveTo(getAngle(blake.x, blake.y, f[currentFocus].x, f[currentFocus].y));
 						if (fDist[s] < 10) {
 							f[currentFocus].regen();
 							currentFocus = 0;
 						}
 					} else {
+						//if int counter is increasing, random movement is enabled
 						if (intCounter == 1 || intCounter == blake.endurance * 10) {
 							Random rand = new Random();
 							randDist = rand.nextDouble();
 							randA = rand.nextDouble();
 							intCounter = 2;
 						}
-						blake.moveTo(randDist * 500, randA * 359);
+						blake.moveTo(randA * 359);
 					}
 				}
+				//thaw intCounter
 				intCounter += 1;
 				bView.setX(blake.x);
 				bView.setY(blake.y);
@@ -207,11 +235,11 @@ public class Driver extends Application {
 	 * @throws FileNotFoundException
 	 */
 	private static long timePassed(LocalDateTime date) throws FileNotFoundException {
-		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd
-		// HH:mm");
+		//reads the LocalDateTime in the save as text and converts back and into a long of seconds
 		Scanner in = new Scanner(new FileReader("Saves\\sf.txt"));
 		if (in.next().equals("time")) {
 			in.nextLine();
+			//temp null variable
 			LocalDateTime dateOld = null;
 			dateOld = LocalDateTime.parse(in.next());
 			long passed = Duration.between(dateOld, date).toMillis() / 1000;
@@ -222,18 +250,21 @@ public class Driver extends Application {
 	}
 
 	/**
-	 * Checks to see if there is a current save file, pulls saved stats if there is
+	 * Pulls an array of stats from the current save file, or creates and empty array
 	 * @return the stats from the save file or an empty int[] array
 	 * @throws FileNotFoundException
 	 */
 	private static int[] findBlake() throws FileNotFoundException {
 		Scanner in = new Scanner(new FileReader("Saves\\sf.txt"));
 		boolean foundStats = false;
+		//empty array
 		int[] stats = new int[6];
 		while (!foundStats) {
 			if (in.nextLine().equals("stats")) {
 				// in.nextLine();
+				//splits numbers into list by whitespace
 				String[] temp = in.nextLine().split(" ");
+				//fills array
 				for (int r = 0; r < temp.length; r++) {
 					stats[r] = Integer.parseInt(temp[r]);
 				}
@@ -281,13 +312,15 @@ public class Driver extends Application {
 	 */
 	public static double getAngle(double x, double y, double x2, double y2) throws ArithmeticException {
 		double angleF;
+		//code to make sure that (y-y2) is not divided by 0
 		if ((x - x2) != 0) {
 			angleF = Math.atan((y - y2) / (x - x2));
 		} else {
 			x += 1;
 			angleF = Math.atan((y - y2) / (x - x2));
 		}
-
+		
+		//code to get true 360 angle instead of reference angle 
 		if ((y - y2) > 0 && (x - x2) > 0) {
 			return angleF * (180.0 / Math.PI) + 180.0;
 		} else if ((y - y2) < 0 && (x - x2) > 0) {
